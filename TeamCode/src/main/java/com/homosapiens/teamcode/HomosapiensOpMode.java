@@ -29,37 +29,26 @@
 
 package com.homosapiens.teamcode;
 
+import com.homosapiens.teamcode.controls.GamepadControls;
+import com.homosapiens.teamcode.utils.HomosapiensLogger;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import com.homosapiens.teamcode.controls.JoystickMovement;
-
-/**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
-@TeleOp(name="Homo", group="Iterative Opmode")
-public class HomoOpMode extends OpMode {
-
+@TeleOp(name="Homosapiens", group="Iterative Opmode")
+public class HomosapiensOpMode extends OpMode {
     private DcMotor bottomRightMotor;
     private DcMotor topRightMotor;
 
     private DcMotor bottomLeftMotor;
     private DcMotor topLeftMotor;
 
+    private HomosapiensLogger logger;
+
     @Override
     public void init() {
+        logger = new HomosapiensLogger(System.out, telemetry);
+
         bottomRightMotor = hardwareMap.get(DcMotor.class, "rightbottom");
         topRightMotor = hardwareMap.get(DcMotor.class, "righttop");
 
@@ -74,21 +63,22 @@ public class HomoOpMode extends OpMode {
 
     @Override
     public void loop() {
-        JoystickMovement.handleJoystickMovement(
-                bottomRightMotor,
-                topRightMotor,
-                bottomLeftMotor,
-                topLeftMotor,
-                telemetry
+        GamepadControls.handleJoystickMovement(
+                gamepad1,
+                topLeftMotor, topRightMotor, bottomRightMotor, bottomLeftMotor,
+                logger
         );
 
-        JoystickMovement.handleTriggerRotation(
-                bottomRightMotor,
-                topRightMotor,
-                bottomLeftMotor,
-                topLeftMotor,
-                telemetry
+        GamepadControls.handleTriggerRotation(
+                gamepad1,
+                topLeftMotor, topRightMotor, bottomRightMotor, bottomLeftMotor,
+                logger
+        );
+
+        GamepadControls.handleDpadRotation(
+                gamepad1,
+                topLeftMotor, topRightMotor, bottomRightMotor, bottomLeftMotor,
+                logger
         );
     }
-
 }
